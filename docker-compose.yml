@@ -1,0 +1,71 @@
+version: '3'
+services:
+  cif:
+    build:
+      dockerfile: ./Dockerfile-ubuntu
+      context: https://github.com/CommunityHoneyNetwork/stingar-cif.git#v0.1.2
+    image: cif:ubuntu
+    privileged: true
+    ports:
+      - "5000:5000"
+  elasticsearch:
+    user: "1000"
+    image: docker.elastic.co/elasticsearch/elasticsearch-oss:6.0.0
+    volumes:
+      - .devel/elasticsearch/data:/usr/share/elasticsearch/data:z
+      - .devel/elasticsearch/elasticsearch.yml:/usr/share/elasticsearch/config/elasticsearch.yml:z
+    ports:
+      - "9200:9200"
+      - "9300:9300"
+    environment:
+      ES_JAVA_OPTS: "-Xmx256m -Xms256m"
+    # logging:
+    #   driver: fluentd
+    #   options:
+    #     fluentd-address: localhost:24224
+    #     tag: efk.elasticsearch
+  kibana:
+    user: "1000"
+    image: docker.elastic.co/kibana/kibana-oss:6.0.0
+    volumes:
+      - .devel/kibana/kibana.yml:/usr/share/kibana/config/kibana.yml:z
+    ports:
+      - "5601:5601"
+    depends_on:
+      - elasticsearch
+      - fluentd
+    # logging:
+    #   driver: fluentd
+    #   options:
+    #     fluentd-address: localhost:24224
+    #     tag: efk.kibana
+    links:
+      - elasticsearch:elasticsearch
+#  mongodb:
+#    image: stingar/mongodb:latest
+#    volumes:
+#      - ./storage/mongodb:/var/lib/mongo:z
+  fluentd:
+    build:
+      context: .devel/fluentd
+    volumes:
+      - .devel/fluentd/conf/fluent.conf:/fluentd/etc/fluent.conf:z
+      - ./fluentd-outputs/out_stingar.rb:/etc/fluent/plugin/out_cif.rb:z
+    ports:
+      - "24224:24224"
+      - "24224:24224/udp"
+    links:
+      - cif:cif
+      - elasticsearch:elasticsearch
+  cowrie:
+    build:
+      dockerfile: ./Dockerfile-ubuntu
+      context: ./fluentd-cowrie
+    image: cowrie:ubuntu
+    ports:
+      - "22:2222"
+      - "23:2223"
+    depends_on:
+      - fluentd
+    links:
+      - fluentd:fluentd
