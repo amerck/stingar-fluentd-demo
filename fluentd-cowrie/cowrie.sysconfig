@@ -10,8 +10,8 @@ CHN_SERVER="http://chnserver"
 
 
 # AMQP Server Information
-FLUENTD_HOST="fluentd"
-FLUENTD_PORT=24224
+FLUENTD_HOST="fluentbit"
+FLUENTD_PORT=24284
 FLUENTD_APP="stingar"
 
 

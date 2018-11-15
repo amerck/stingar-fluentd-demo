@@ -57,6 +57,13 @@ services:
     links:
       - cif:cif
       - elasticsearch:elasticsearch
+
+  fluentbit:
+    image: fluent/fluent-bit
+    links:
+      - fluentd:fluentd
+    volumes:
+      - .devel/fluentbit/conf/fluent-bit.conf:/fluent-bit/etc/fluent-bit.conf
   cowrie:
     build:
       dockerfile: ./Dockerfile-ubuntu
@@ -68,4 +75,4 @@ services:
     depends_on:
       - fluentd
     links:
-      - fluentd:fluentd
+      - fluentbit:fluentbit
