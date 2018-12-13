@@ -9,7 +9,7 @@ DEBUG=false
 CHN_SERVER="http://chnserver"
 
 
-# AMQP Server Information
+# Fluentd Server Information
 FLUENTD_HOST="fluentbit"
 FLUENTD_PORT=24284
 FLUENTD_APP="stingar"

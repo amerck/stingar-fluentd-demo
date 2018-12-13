@@ -15,8 +15,8 @@ services:
       - .devel/elasticsearch/data:/usr/share/elasticsearch/data:z
       - .devel/elasticsearch/elasticsearch.yml:/usr/share/elasticsearch/config/elasticsearch.yml:z
     ports:
-      - "9200:9200"
-      - "9300:9300"
+      - "127.0.0.1:9200:9200"
+      - "127.0.0.1:9300:9300"
     environment:
       ES_JAVA_OPTS: "-Xmx256m -Xms256m"
     # logging:
@@ -57,13 +57,16 @@ services:
     links:
       - cif:cif
       - elasticsearch:elasticsearch
-
+    env_file:
+      - stingar.env
   fluentbit:
     image: fluent/fluent-bit
     links:
       - fluentd:fluentd
     volumes:
       - .devel/fluentbit/conf/fluent-bit.conf:/fluent-bit/etc/fluent-bit.conf
+    env_file:
+      - stingar.env
   cowrie:
     build:
       dockerfile: ./Dockerfile-ubuntu
@@ -76,3 +79,12 @@ services:
       - fluentd
     links:
       - fluentbit:fluentbit
+  stingarapi:
+    build:
+      dockerfile: ./Dockerfile
+      context: stingar-api
+    image: stingar-api:ubuntu
+    ports:
+      - "8000:8000"
+    links:
+      - elasticsearch:elasticsearch
