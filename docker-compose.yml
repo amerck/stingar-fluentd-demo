@@ -19,11 +19,6 @@ services:
       - "127.0.0.1:9300:9300"
     environment:
       ES_JAVA_OPTS: "-Xmx256m -Xms256m"
-    # logging:
-    #   driver: fluentd
-    #   options:
-    #     fluentd-address: localhost:24224
-    #     tag: efk.elasticsearch
   kibana:
     user: "1000"
     image: docker.elastic.co/kibana/kibana-oss:6.0.0
@@ -34,17 +29,8 @@ services:
     depends_on:
       - elasticsearch
       - fluentd
-    # logging:
-    #   driver: fluentd
-    #   options:
-    #     fluentd-address: localhost:24224
-    #     tag: efk.kibana
     links:
       - elasticsearch:elasticsearch
-#  mongodb:
-#    image: stingar/mongodb:latest
-#    volumes:
-#      - ./storage/mongodb:/var/lib/mongo:z
   fluentd:
     build:
       context: .devel/fluentd
@@ -69,7 +55,7 @@ services:
       - stingar.env
   cowrie:
     build:
-      dockerfile: ./Dockerfile-ubuntu
+      dockerfile: Dockerfile
       context: ./fluentd-cowrie
     image: cowrie:ubuntu
     ports:
@@ -79,6 +65,8 @@ services:
       - fluentd
     links:
       - fluentbit:fluentbit
+    env_file:
+      - stingar.env
   stingarapi:
     build:
       dockerfile: ./Dockerfile

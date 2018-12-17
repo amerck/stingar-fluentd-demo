@@ -38,6 +38,7 @@ class Output(cowrie.core.output.Output):
     """
 
     def __init__(self):
+        self.identifier = CONFIG.get('output_stingarfluentd', 'identifier')
         cowrie.core.output.Output.__init__(self)
 
     def start(self):
@@ -55,7 +56,9 @@ class Output(cowrie.core.output.Output):
 
         session = entry["session"]
         if entry["eventid"] == 'cowrie.session.connect':
-            self.meta[session] = {'session': session,
+            self.meta[session] = {'app': 'cowrie',
+                                  'identifier': self.identifier,
+                                  'session': session,
                                   'startTime': entry["timestamp"],
                                   'endTime': '',
                                   'peerIP': entry["src_ip"],

@@ -13,7 +13,7 @@ class Fluent::Plugin::CIFOutput < Fluent::Plugin::Output
     config_param :cif_provider, :string, default: "chn"
     config_param :cif_tlp, :string, default: "green"
     config_param :cif_confidence, :integer, default: 8
-    config_param :cif_tags, :string, default: "honeypot"
+    config_param :cif_tags, :array, default: ["honeypot"]
     config_param :cif_group, :string, default: "everyone"
     config_param :cif_default, :string, default: "green"
 
@@ -37,7 +37,7 @@ class Fluent::Plugin::CIFOutput < Fluent::Plugin::Output
                 "tlp"         => @cif_tlp,
                 "provider"    => @cif_provider,
                 "group"       => @cif_group,
-                "tags"        => @cif_tags,
+                "tags"        => @cif_tags << record['app'],
                 "confidence"  => @cif_confidence
             }
             submit(indicator)
@@ -46,6 +46,7 @@ class Fluent::Plugin::CIFOutput < Fluent::Plugin::Output
 
     def submit(indicator)
         data = JSON.generate(indicator)
+        puts(data)
         @handle.post(@uri, data, headers=@headers)
     end
 end

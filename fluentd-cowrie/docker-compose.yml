@@ -1,20 +1,9 @@
 version: '2'
 services:
-  ubuntu:
+  cowrie:
     build:
       context: .
-      dockerfile: Dockerfile-ubuntu
+      dockerfile: Dockerfile
     image: cowrie:ubuntu
-    volumes:
-      - ./cowrie.sysconfig:/etc/default/cowrie:z
-    ports:
-      - "2222:2222"
-  centos:
-    build:
-      context: .
-      dockerfile: Dockerfile-centos
-    image: cowrie:centos
-    volumes:
-      - ./cowrie.sysconfig:/etc/sysconfig/cowrie:z
     ports:
       - "2222:2222"
