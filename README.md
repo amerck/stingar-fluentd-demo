@@ -30,6 +30,13 @@ curl -H "Authorization: Token token=xxxxx" http://localhost:5000/indicators
 Navigate to localhost:5601 in a web browser. After adding the "stingar*" index pattern in Kibana, you should see events corresponding to your login attempts.
 
 
+## To Do
+* Certificate based authentication for fluentd
+* More robust API functions
+* Authentication for API
+* Ability to specify fluentd output modules at runtime
+
+
 ## Architecture
 
 ![STINGAR Fluentd Architecutre](./docs/img/stingar_fluentd_arch.jpeg)
