@@ -11,7 +11,7 @@ Begin by building and starting the CIF container in order to retrieve the authen
 docker-compose up cif
 ```
 
-Update the "cif_token" option in ./.devel/fluentd/conf/fluent.conf with the authentication token returned by CIFv3
+Update the "cif_token" option in stingar.env with the authentication token returned by CIFv3
 
 Start all of the containers in the docker-compose file:
 
@@ -28,3 +28,8 @@ curl -H "Authorization: Token token=xxxxx" http://localhost:5000/indicators
 ```
 
 Navigate to localhost:5601 in a web browser. After adding the "stingar*" index pattern in Kibana, you should see events corresponding to your login attempts.
+
+
+## Architecture
+
+![STINGAR Fluentd Architecutre](./docs/img/stingar_fluentd_arch.jpeg)
