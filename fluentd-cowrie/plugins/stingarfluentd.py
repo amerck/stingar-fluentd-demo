@@ -59,50 +59,51 @@ class Output(cowrie.core.output.Output):
             self.meta[session] = {'app': 'cowrie',
                                   'identifier': self.identifier,
                                   'session': session,
-                                  'startTime': entry["timestamp"],
-                                  'endTime': '',
-                                  'peerIP': entry["src_ip"],
-                                  'peerPort': entry["src_port"],
-                                  'hostIP': entry["dst_ip"],
-                                  'hostPort': entry["dst_port"],
-                                  'loggedin': None,
-                                  'credentials': [],
-                                  'commands': [],
-                                  'unknownCommands': [],
-                                  'urls': [],
-                                  'versions': None,
-                                  'ttylog': None}
+                                  'start_time': entry["timestamp"],
+                                  'end_time': '',
+                                  'src_ip': entry["src_ip"],
+                                  'src_port': entry["src_port"],
+                                  'dst_ip': entry["dst_ip"],
+                                  'dst_port': entry["dst_port"],
+                                  'data': {
+                                      'loggedin': None,
+                                      'credentials': [],
+                                      'commands': [],
+                                      'unknownCommands': [],
+                                      'urls': [],
+                                      'versions': None,
+                                      'ttylog': None}
+                                  }
 
         elif entry["eventid"] == 'cowrie.login.success':
             u, p = entry["username"], entry["password"]
-            self.meta[session]["logged_in"] = (u, p)
+            self.meta[session]["data"]["logged_in"] = (u, p)
 
         elif entry["eventid"] == 'cowrie.login.failed':
             u, p = entry["username"], entry["password"]
-            self.meta[session]["credentials"].append((u, p))
+            self.meta[session]["data"]["credentials"].append((u, p))
 
         elif entry["eventid"] == 'cowrie.command.success':
             c = entry["input"]
-            self.meta[session]["commands"].append(c)
+            self.meta[session]["data"]["commands"].append(c)
 
         elif entry["eventid"] == 'cowrie.command.failed':
             uc = entry["input"]
-            self.meta[session]["unknownCommands"].append(uc)
+            self.meta[session]["data"]["unknownCommands"].append(uc)
 
         elif entry["eventid"] == 'cowrie.session.file_download':
             url = entry["url"]
-            self.meta[session]["urls"].append(url)
+            self.meta[session]["data"]["urls"].append(url)
 
         elif entry["eventid"] == 'cowrie.client.version':
             v = entry["version"]
-            self.meta[session]["version"] = v
+            self.meta[session]["data"]["version"] = v
 
         elif entry["eventid"] == 'cowrie.log.closed':
             with open(entry["ttylog"]) as ttylog:
-                self.meta['ttylog'] = ttylog.read().encode('hex')
+                self.meta["data"]['ttylog'] = ttylog.read().encode('hex')
 
         elif entry["eventid"] == 'cowrie.session.closed':
             meta = self.meta[session]
-            self.meta[session]['endTime'] = entry["timestamp"]
-            self.sender.emit(COWRIE_TOPIC,
-                             meta)
+            self.meta[session]['end_time'] = entry["timestamp"]
+            self.sender.emit(COWRIE_TOPIC, meta)
