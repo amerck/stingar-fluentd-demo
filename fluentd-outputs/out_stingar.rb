@@ -33,7 +33,7 @@ class Fluent::Plugin::CIFOutput < Fluent::Plugin::Output
     def process(tag, es)
         es.each do |_time, record|
             indicator = {
-                "indicator"   => record['peerIP'],
+                "indicator"   => record['src_ip'],
                 "tlp"         => @cif_tlp,
                 "provider"    => @cif_provider,
                 "group"       => @cif_group,
