@@ -37,7 +37,7 @@ class Fluent::Plugin::CIFOutput < Fluent::Plugin::Output
                 "tlp"         => @cif_tlp,
                 "provider"    => @cif_provider,
                 "group"       => @cif_group,
-                "tags"        => @cif_tags << record['app'],
+                "tags"        => @cif_tags + [record['app']],
                 "confidence"  => @cif_confidence
             }
             submit(indicator)
