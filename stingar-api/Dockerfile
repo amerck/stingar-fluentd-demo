@@ -1,6 +1,6 @@
 FROM jfloff/alpine-python
 
-RUN pip install elasticsearch falcon requests gunicorn
+RUN pip install elasticsearch elasticsearch-dsl falcon requests gunicorn
 
 COPY api /api
 WORKDIR /api

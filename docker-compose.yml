@@ -10,7 +10,7 @@ services:
       - "5000:5000"
   elasticsearch:
     user: "1000"
-    image: docker.elastic.co/elasticsearch/elasticsearch-oss:6.0.0
+    image: docker.elastic.co/elasticsearch/elasticsearch-oss:6.5.0
     volumes:
       - .devel/elasticsearch/data:/usr/share/elasticsearch/data:z
       - .devel/elasticsearch/elasticsearch.yml:/usr/share/elasticsearch/config/elasticsearch.yml:z
@@ -21,7 +21,7 @@ services:
       ES_JAVA_OPTS: "-Xmx256m -Xms256m"
   kibana:
     user: "1000"
-    image: docker.elastic.co/kibana/kibana-oss:6.0.0
+    image: docker.elastic.co/kibana/kibana-oss:6.5.0
     volumes:
       - .devel/kibana/kibana.yml:/usr/share/kibana/config/kibana.yml:z
     ports:
@@ -36,12 +36,13 @@ services:
       context: .devel/fluentd
     volumes:
       - .devel/fluentd/conf/fluent.conf:/fluentd/etc/fluent.conf:z
+      - .devel/fluentd/conf/fluent.conf:/etc/conf.d/es.conf:z
       - ./fluentd-outputs/out_stingar.rb:/etc/fluent/plugin/out_cif.rb:z
     ports:
       - "24224:24224"
       - "24224:24224/udp"
     links:
-      - cif:cif
+#      - cif:cif
       - elasticsearch:elasticsearch
     env_file:
       - stingar.env
