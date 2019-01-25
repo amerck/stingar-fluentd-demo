@@ -497,7 +497,10 @@ listen_endpoints = tcp:2223:interface=0.0.0.0
 
 [output_stingarfluentd]
 enabled=true
-host=${FLUENTBIT_HOST}
-port=${FLUENTBIT_PORT}
+fluent_host=${FLUENTBIT_HOST}
+fluent_port=${FLUENTBIT_PORT}
 app=${FLUENTBIT_APP}
+
 identifier=${COWRIE_IDENT}
+ip_addr=${COWRIE_IP}
+hostname=${COWRIE_HOST}

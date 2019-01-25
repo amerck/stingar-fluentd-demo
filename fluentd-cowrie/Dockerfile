@@ -44,6 +44,9 @@ COPY plugins/stingarfluentd.py ${COWRIE_DIR}/cowrie/src/cowrie/output
 COPY cowrie.cfg.template ${COWRIE_DIR}
 #RUN envsubst < cowrie.cfg.template > cowrie/etc/cowrie.cfg
 
+# Copy checkin script
+COPY checkin.py ${COWRIE_DIR}
+
 # Set permissions on cowrie directory
 RUN chown -R ${COWRIE_USER} ${COWRIE_DIR}
 
@@ -52,6 +55,8 @@ RUN sed -i 's/^DAEMONIZE=""/DAEMONIZE="-n"/' /opt/cowrie/bin/cowrie
 
 USER ${COWRIE_USER}
 ENV PATH=${COWRIE_DIR}/cowrie/bin:${PATH}
+
 CMD envsubst < cowrie.cfg.template > cowrie/etc/cowrie.cfg \
+    && python ${COWRIE_DIR}/checkin.py -i ${COWRIE_IDENT} -n ${COWRIE_HOST} -a ${COWRIE_IP} -t dionaea \
     && cowrie start -n --pidfile=var/run/cowrie.pid]
 EXPOSE 2222 2223

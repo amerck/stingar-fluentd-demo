@@ -29,7 +29,7 @@ import cowrie.core.output
 
 from cowrie.core.config import CONFIG
 
-COWRIE_TOPIC = 'cowrie.sessions'
+COWRIE_TOPIC = 'events.cowrie'
 
 
 class Output(cowrie.core.output.Output):
@@ -39,11 +39,13 @@ class Output(cowrie.core.output.Output):
 
     def __init__(self):
         self.identifier = CONFIG.get('output_stingarfluentd', 'identifier')
+        self.ip_addr = CONFIG.get('output_stingarfluentd', 'ip_addr')
+        self.hostname = CONFIG.get('output_stingarfluentd', 'hostname')
         cowrie.core.output.Output.__init__(self)
 
     def start(self):
-        host = CONFIG.get('output_stingarfluentd', 'host')
-        port = CONFIG.getint('output_stingarfluentd', 'port')
+        host = CONFIG.get('output_stingarfluentd', 'fluent_host')
+        port = CONFIG.getint('output_stingarfluentd', 'fluent_port')
         app = CONFIG.get('output_stingarfluentd', 'app')
 
         self.sender = sender.FluentSender(app, host=host, port=port)
@@ -58,12 +60,13 @@ class Output(cowrie.core.output.Output):
         if entry["eventid"] == 'cowrie.session.connect':
             self.meta[session] = {'app': 'cowrie',
                                   'identifier': self.identifier,
+                                  'hostname': self.hostname,
                                   'session': session,
                                   'start_time': entry["timestamp"],
                                   'end_time': '',
                                   'src_ip': entry["src_ip"],
                                   'src_port': entry["src_port"],
-                                  'dst_ip': entry["dst_ip"],
+                                  'dst_ip': self.ip_addr,
                                   'dst_port': entry["dst_port"],
                                   'data': {
                                       'loggedin': None,
@@ -74,6 +77,8 @@ class Output(cowrie.core.output.Output):
                                       'versions': None,
                                       'ttylog': None}
                                   }
+            if not self.ip_addr:
+                self.meta[session]["dst_ip"] = entry["dst_ip"]
 
         elif entry["eventid"] == 'cowrie.login.success':
             u, p = entry["username"], entry["password"]

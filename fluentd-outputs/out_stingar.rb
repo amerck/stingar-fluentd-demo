@@ -47,6 +47,10 @@ class Fluent::Plugin::CIFOutput < Fluent::Plugin::Output
     def submit(indicator)
         data = JSON.generate(indicator)
         puts(data)
-        @handle.post(@uri, data, headers=@headers)
+        begin
+            @handle.post(@uri, data, headers=@headers)
+        rescue
+            log.warn("Cannot connect to " + @uri.to_s)
+        end
     end
 end
