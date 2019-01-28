@@ -23,6 +23,7 @@ def main():
                         help="Port of Fluent Bit server")
     parser.add_argument("--fluent-app", default="stingar",
                         help="Application name for Fluent Bit server")
+    parser.add_argument("--tags", help="Comma separated tags for honeypot.")
     args = parser.parse_args()
 
     dt = datetime.datetime.now()
@@ -32,7 +33,8 @@ def main():
             "honeypot": args.type,
             "ip": args.address,
             "created": dt.strftime("%Y/%m/%d %H:%M:%S"),
-            "updated": dt.strftime("%Y/%m/%d %H:%M:%S")}
+            "updated": dt.strftime("%Y/%m/%d %H:%M:%S"),
+            "tags": args.tags}
 
     sender = FluentSender(args.fluent_app,
                           host=args.fluent_host,

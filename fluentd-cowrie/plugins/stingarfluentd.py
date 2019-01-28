@@ -41,6 +41,7 @@ class Output(cowrie.core.output.Output):
         self.identifier = CONFIG.get('output_stingarfluentd', 'identifier')
         self.ip_addr = CONFIG.get('output_stingarfluentd', 'ip_addr')
         self.hostname = CONFIG.get('output_stingarfluentd', 'hostname')
+        self.tags = CONFIG.get('output_stingarfluentd', 'tags')
         cowrie.core.output.Output.__init__(self)
 
     def start(self):
@@ -59,6 +60,7 @@ class Output(cowrie.core.output.Output):
         session = entry["session"]
         if entry["eventid"] == 'cowrie.session.connect':
             self.meta[session] = {'app': 'cowrie',
+                                  'tags': self.tags,
                                   'identifier': self.identifier,
                                   'hostname': self.hostname,
                                   'session': session,

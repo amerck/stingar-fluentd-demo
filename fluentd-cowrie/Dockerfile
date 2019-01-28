@@ -57,6 +57,6 @@ USER ${COWRIE_USER}
 ENV PATH=${COWRIE_DIR}/cowrie/bin:${PATH}
 
 CMD envsubst < cowrie.cfg.template > cowrie/etc/cowrie.cfg \
-    && python ${COWRIE_DIR}/checkin.py -i ${COWRIE_IDENT} -n ${COWRIE_HOST} -a ${COWRIE_IP} -t dionaea \
+    && python ${COWRIE_DIR}/checkin.py -i ${COWRIE_IDENT} -n ${COWRIE_HOST} -a ${COWRIE_IP} -t dionaea --tags "${TAGS}" \
     && cowrie start -n --pidfile=var/run/cowrie.pid]
 EXPOSE 2222 2223

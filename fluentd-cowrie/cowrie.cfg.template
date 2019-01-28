@@ -504,3 +504,4 @@ app=${FLUENTBIT_APP}
 identifier=${COWRIE_IDENT}
 ip_addr=${COWRIE_IP}
 hostname=${COWRIE_HOST}
+tags=${TAGS}
