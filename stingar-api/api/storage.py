@@ -15,7 +15,7 @@ class StingarES:
 
         # Build filters from kwargs
         for k, v in kwargs.items():
-            s = s.filter('term', **{k: v})
+            s = s.filter('wildcard', **{k: v})
 
         response = s.execute()
         for hit in response:
@@ -35,7 +35,7 @@ class StingarES:
 
         # Build filters from kwargs
         for k, v in kwargs.items():
-            s = s.filter('terms', **{k: v})
+            s = s.filter('wildcard', **{k: v})
 
         response = s.execute()
         for hit in response:
