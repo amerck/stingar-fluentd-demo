@@ -6,7 +6,7 @@ from storage import StingarES
 es = StingarES()
 
 
-class SensorResource(object):
+class Sensors(object):
 
     def on_get(self, req, resp):
         results = es.get_sensors()
@@ -14,10 +14,18 @@ class SensorResource(object):
         resp.status = falcon.HTTP_200
 
 
+class Sensor(object):
+
+    def on_get(self, req, resp, ident):
+        results = es.get_sensors(identifier=ident)
+        resp.body = str(results)
+        resp.status = falcon.HTTP_200
+
+
 class EventResource(object):
 
     def on_get(self, req, resp):
-        results = es.get_events()
+        results = es.get_events(**req.params)
         resp.body = json.dumps(results, ensure_ascii=False)
         resp.status = falcon.HTTP_200
 
@@ -37,5 +45,3 @@ class IndicatorResource(object):
         else:
             resp.body = json.dumps(results, ensure_ascii=True)
         resp.status = falcon.HTTP_200
-
-
