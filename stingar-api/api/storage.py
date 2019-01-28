@@ -9,6 +9,12 @@ class StingarES:
     def __init__(self, host='elasticsearch'):
         self.es = Elasticsearch([{'host': host}])
 
+    def check_token(self, token):
+        s = Search(index="users", using=self.es)
+        s = s.filter('term', token=token)
+        response = s.execute()
+        return response
+
     def get_sensors(self, **kwargs):
         sensors = []
         s = Search(index="sensors", using=self.es)
