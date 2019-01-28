@@ -1,7 +1,8 @@
 import falcon
+import auth
 import resources
 
-api = application = falcon.API()
+api = application = falcon.API(middleware=[auth.AuthMiddleware()])
 
 events = resources.EventResource()
 indicators = resources.IndicatorResource()
